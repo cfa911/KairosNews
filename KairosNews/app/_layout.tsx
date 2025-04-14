@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
+
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -31,7 +31,8 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="second-step" options={{title: 'Escolha de Tópicos' }} />
+        <Stack.Screen name="loading" options={{ headerShown: false }} />
+        <Stack.Screen name="chooseTopic" options={{title: 'Escolha de Tópicos' }} />
         <Stack.Screen name="result" options={{headerShown: true}}/>
         <Stack.Screen name="+not-found" />
       </Stack>

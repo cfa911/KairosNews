@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, Pressable, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SectionGrid } from 'react-native-super-grid';
 import { useRouter } from 'expo-router';

@@ -37,7 +37,7 @@ export default function resultQuery() {
               console.log('Sequence completed');
             },
           ]}
-          speed={100}
+          speed={90}
           wrapper="span"
           cursor={false}
           repeat={1}
@@ -54,5 +54,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flexWrap: 'wrap', backgroundColor: '#101218', padding: 10
   },
-  titulo: { fontSize: '3rem', color: '#ffffff' },
+  titulo: { fontSize: 30, color: '#ffffff' },
 });
