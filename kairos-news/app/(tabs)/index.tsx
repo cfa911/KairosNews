@@ -1,15 +1,29 @@
-import { View, Text, StyleSheet, TextInput, Keyboard, Image } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
+import { View, Text, StyleSheet, TextInput, Keyboard, Image, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useState } from 'react'
+import { useState } from 'react';
 import FadeInView from '@/components/FadeInView';
 import Typewriter from '@/components/TypeWriter';
+import DropDownPicker, { SelectList } from 'react-native-dropdown-select-list';
+import React from 'react';
 
 export default function TabOneScreen() {
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const [showSecondButton, setShowSecondButton] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [selected, setSelected] = React.useState("");
+  
+  const data = [
+      {key:'1', value:'Mobiles', disabled:true},
+      {key:'2', value:'Appliances'},
+      {key:'3', value:'Cameras'},
+      {key:'4', value:'Computers', disabled:true},
+      {key:'5', value:'Vegetables'},
+      {key:'6', value:'Diary Products'},
+      {key:'7', value:'Drinks'},
+  ]
 
   const handleSubmit = async () => {
     if (!query.trim()) return;
@@ -58,10 +72,29 @@ export default function TabOneScreen() {
           style={{ marginTop: 30, color: '#ffffff', fontFamily: 'Bahnschrift' }}
         /> */}
         {/* <EditScreenInfo path="app/(tabs)/index.tsx" /> */}
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Button title="Filtros Avançados" onPress={() => {
+            setShowSecondButton(true);
+          }} />
+          {showSecondButton && (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Button title="Escolher Data" onPress={() => {
+              }} />
+   <SelectList 
+        setSelected={(val) => setSelected(val)} 
+        data={data} 
+        save="value"
+    />
+            </View>
+
+          )}
+        </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
           <Typewriter speed={20} textStyle={styles.nota} text={"   Banco de dados apenas relevante ao ano 2022   "} />
 
         </View>
+
+
       </View>
     </View>
   );
@@ -75,7 +108,7 @@ const styles = StyleSheet.create({
 
   },
   title: {
-    marginBottom:  30
+    marginBottom: 30
   },
   searchContainer: {
     flex: 1,
@@ -114,5 +147,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Bahnschrift',
     textAlign: 'center',
     marginBottom: 30,
+  },
+  button: {
   }
 });
