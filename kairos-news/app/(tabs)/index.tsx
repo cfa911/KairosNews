@@ -1,35 +1,30 @@
-import { View, Text, StyleSheet, TextInput, Keyboard, Image, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Keyboard, Image, Button,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import FadeInView from '@/components/FadeInView';
 import Typewriter from '@/components/TypeWriter';
-import DropDownPicker, { SelectList } from 'react-native-dropdown-select-list';
 import React from 'react';
+import { postData } from '@/utils/api.js'; // Adjust the import path as necessary
 
 export default function TabOneScreen() {
-  const [query, setQuery] = useState('');
-  const router = useRouter();
   const [showSecondButton, setShowSecondButton] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [selected, setSelected] = React.useState("");
-  
-  const data = [
-      {key:'1', value:'Mobiles', disabled:true},
-      {key:'2', value:'Appliances'},
-      {key:'3', value:'Cameras'},
-      {key:'4', value:'Computers', disabled:true},
-      {key:'5', value:'Vegetables'},
-      {key:'6', value:'Diary Products'},
-      {key:'7', value:'Drinks'},
-  ]
+
+  const [query, setQuery] = useState('');
+  const [topic, setTopic] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async () => {
-    if (!query.trim()) return;
-    await AsyncStorage.setItem('query', query.trim());
-    Keyboard.dismiss();
-    router.push('/chooseTopic'); // Navigate to /home
+    const result = await postData(query, topic, '17-07-1998', '20-12-2025');
+    if (result.success) {
+      router.push({
+        pathname: '/loading',
+        params: { id: result.data.id }  // Pass ID to loading screen
+      });
+    } else {
+      Alert.alert('Error', result.error);
+    }
   };
 
   return (
@@ -39,7 +34,6 @@ export default function TabOneScreen() {
           <Text style={styles.kairo}>Kairos<Text style={styles.news}>News</Text></Text>
         </FadeInView>
       </View>
-
 
       <View style={styles.searchContainer} >
         <TextInput
@@ -51,47 +45,30 @@ export default function TabOneScreen() {
           returnKeyType="done"
           autoFocus
         />
-        {/* <TypeAnimation
-          sequence={[
-            300,
-            'Atenção que a informação disponivel é apenas relevante a 2022!', // Types 'One'
-            1000,
-            'Insira o input acima e em seguida escolha o topico na pagina seguinte', // Types 'One'
-            2000,
-            'Atenção que a informação disponivel é apenas relevante a 2022!', // Types 'One'
-            1000,
-
-            // Waits 1s
-            () => {
-              console.log('Sequence completed');
-            },
-          ]}
-          speed={70}
-          cursor={false}
-          repeat={1}
-          style={{ marginTop: 30, color: '#ffffff', fontFamily: 'Bahnschrift' }}
-        /> */}
         {/* <EditScreenInfo path="app/(tabs)/index.tsx" /> */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Button title="Filtros Avançados" onPress={() => {
-            setShowSecondButton(true);
-          }} />
+          <View  style={{ flex: 2 ,justifyContent: 'center', alignItems: 'center' }}>
+            <Button title="Filtros Avançados" color= '#13ed8c'  onPress={() => {
+              setShowSecondButton(true);
+            }} />
+          </View>
+          <View style={{ flex: 1 }}>
           {showSecondButton && (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Button title="Escolher Data" onPress={() => {
+            <FadeInView style={{ flex: 1, flexDirection: 'row',alignItems: 'stretch'  }}>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Button title="Escolha uma Data" onPress={() => {
               }} />
-   <SelectList 
-        setSelected={(val) => setSelected(val)} 
-        data={data} 
-        save="value"
-    />
-            </View>
-
+              </View>
+              <View>
+              <Button title="Insira um topico" onPress={() => {
+              }} />
+              </View>
+            </FadeInView>
           )}
+          </View>
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Typewriter speed={20} textStyle={styles.nota} text={"   Banco de dados apenas relevante ao ano 2022   "} />
-
+          <Typewriter speed={20} textStyle={styles.nota} text={"   Exprimente adicionar filtros para uma pesquisa mais minuciosa   "} />
         </View>
 
 
@@ -108,7 +85,7 @@ const styles = StyleSheet.create({
 
   },
   title: {
-    marginBottom: 30
+    margin: 30,
   },
   searchContainer: {
     flex: 1,
@@ -117,10 +94,10 @@ const styles = StyleSheet.create({
 
   },
   searchBar: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#cce',
-    padding: 12,
-    borderRadius: 5,
+    padding: 10,
+    borderRadius: 23,
     color: '#ccc',
     backgroundColor: '#3f4454',
     fontSize: 20,
