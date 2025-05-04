@@ -11,10 +11,10 @@ interface DateRangeModalProps {
 const DateRangeModal: React.FC<DateRangeModalProps> = ({ visible, onClose, onDateSelect }) => {
   const [startYear, setStartYear] = useState(2020);
   const [startMonth, setStartMonth] = useState(1);
-  const [endYear, setEndYear] = useState(2025);
+  const [endYear, setEndYear] = useState(2024);
   const [endMonth, setEndMonth] = useState(12);
 
-  const years = Array.from({ length: 20 }, (_, i) => 2010 + i);
+  const years = Array.from({ length: 5 }, (_, i) => 2020 + i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
   const handleConfirm = () => {
@@ -30,13 +30,12 @@ const DateRangeModal: React.FC<DateRangeModalProps> = ({ visible, onClose, onDat
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Select Date Range</Text>
-          
+          <Text style={styles.title}>Escolha o intervalo face a noticia</Text>
           <View style={styles.dateContainer}>
             <View style={styles.dateSection}>
-              <Text style={styles.sectionTitle}>Start Year</Text>
-              <ScrollView style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>Year:</Text>
+              <Text style={styles.sectionTitle}>Data de Inicio</Text>
+              <ScrollView style={styles.pickerContainer} showsVerticalScrollIndicator={false}>
+                <Text style={styles.pickerLabel}>Ano Inicial:</Text>
                 {years.map(year => (
                   <TouchableOpacity
                     key={`start-${year}`}
@@ -47,8 +46,8 @@ const DateRangeModal: React.FC<DateRangeModalProps> = ({ visible, onClose, onDat
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <ScrollView style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>Start Month:</Text>
+              <ScrollView style={styles.pickerContainer} showsVerticalScrollIndicator={false}>
+                <Text style={styles.pickerLabel}>Mês Incial:</Text>
                 {months.map(month => (
                   <TouchableOpacity
                     key={`start-${month}`}
@@ -62,9 +61,9 @@ const DateRangeModal: React.FC<DateRangeModalProps> = ({ visible, onClose, onDat
             </View>
 
             <View style={styles.dateSection}>
-              <Text style={styles.sectionTitle}>End Year</Text>
-              <ScrollView style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>Year:</Text>
+              <Text style={styles.sectionTitle}>Data de Fim</Text>
+              <ScrollView style={styles.pickerContainer} showsVerticalScrollIndicator={false}>
+                <Text style={styles.pickerLabel}>Ano Final:</Text>
                 {years.map(year => (
                   <TouchableOpacity
                     key={`end-${year}`}
@@ -75,8 +74,8 @@ const DateRangeModal: React.FC<DateRangeModalProps> = ({ visible, onClose, onDat
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <ScrollView style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>End Month:</Text>
+              <ScrollView style={styles.pickerContainer} showsVerticalScrollIndicator={false}>
+                <Text style={styles.pickerLabel}>Mês Final:</Text>
                 {months.map(month => (
                   <TouchableOpacity
                     key={`end-${month}`}

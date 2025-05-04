@@ -24,7 +24,7 @@ export default function Loading() {
         const result = await fetchResults(id);
         clearTimeout(timeoutId);
 
-        if (result.success) {
+        if (result.success && 'data' in result) {
           router.push({
             pathname: '/result',
             params: {
@@ -39,7 +39,7 @@ export default function Loading() {
         }
       } catch (err) {
         clearTimeout(timeoutId);
-        setError(err.message || 'Network request failed');
+        setError(err instanceof Error ? err.message : 'Network request failed');
       }
     };
 

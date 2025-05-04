@@ -1,6 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Keyboard, Image, Button, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, TextInput, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import FadeInView from '@/components/FadeInView';
@@ -8,6 +6,7 @@ import Typewriter from '@/components/TypeWriter';
 import React from 'react';
 import { cancelRequests, postData } from '@/utils/api.js'; // Adjust the import path as necessary
 import DateRangeModal from '@/components/DateRangeModal';
+import SelectionModal from '@/components/SelectionModal';
 
 export default function TabOneScreen() {
   const [showSecondButton, setShowSecondButton] = useState(false);
@@ -15,10 +14,11 @@ export default function TabOneScreen() {
   const [query, setQuery] = useState('');
   const [topic, setTopic] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [dateFrom, setDateFrom] = useState('17-07-1998');
-  const [dateTo, setDateTo] = useState('20-12-2025');
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedVisible, setSelectedVisible] = useState(false);
+
+
   const [dateRange, setDateRange] = useState({
     startDate: '2020/01',
     endDate: '2025/12'
@@ -32,20 +32,20 @@ export default function TabOneScreen() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const result = await postData(query, topic, dateFrom, dateTo);
+      const result = await postData(query, topic, dateRange.startDate, dateRange.endDate);
 
-      if (result.success) {
+      if (result.success && 'data' in result) {
         router.push({
           pathname: '/loading',
           params: {
             id: result.data.id,
             query: query,
             topic: topic,
-            dateInterval: `${dateFrom} to ${dateTo}`
+            dateInterval: `${dateRange.startDate} to ${dateRange.endDate}`
           }
         });
       } else {
-        Alert.alert('Submission Error', result.error || 'Failed to submit data');
+        Alert.alert('Submission Error', 'error' in result ? result.error : 'Failed to submit data');
       }
     } catch (error) {
       Alert.alert('Network Error', 'Could not connect to the server');
@@ -53,6 +53,10 @@ export default function TabOneScreen() {
       setIsSubmitting(false);
     }
   };
+
+  console.log('Date Range:', dateRange);
+
+
 
   return (
     <View style={styles.mainContainer}>
@@ -81,13 +85,14 @@ export default function TabOneScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <FadeInView style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} start={showSecondButton} initialOpacity={0} >
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1 ,justifyContent: 'center', alignItems: 'center' }}>
                 <Button title="Inserir Datas" disabled={!showSecondButton} onPress={() => {
                   setModalVisible(true)
                 }} />
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1 , justifyContent: 'center', alignItems: 'center' }}>
                 <Button title="Insira um topico" disabled={!showSecondButton} onPress={() => {
+                  setSelectedVisible(true)
                 }} />
               </View>
             </FadeInView>
@@ -102,6 +107,21 @@ export default function TabOneScreen() {
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
             onDateSelect={(range) => setDateRange(range)}
+          />
+        </View>
+        <View >
+          <SelectionModal
+            visible={selectedVisible}
+            onClose={() => setSelectedVisible(false)}
+            onSelect={(selected) => {
+              setTopic(selected);
+            }}
+            title="Select News Category"
+            options={[
+              'Estilo de Vida e Lazer', 'Arte e Cultura','Desporto', 'Economia e Sociedade', 
+              'Conflitos e Desastres',  
+              'Saúde', 'Ciencia', 'Crime'
+            ]}
           />
         </View>
       </View>

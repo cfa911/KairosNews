@@ -1,56 +1,52 @@
 // utils/api.js
 import axios from 'axios';
 
-const API_URL = 'https://0edon-test.hf.space'; // Replace with your actual API URL
+const API_URL = 'https://0edon-test.hf.space'; // Your API base URL
 const API_TIMEOUT = 30000; // 30 seconds timeout
+const ACCENT_COLOR = '#13ed8c'; // Matching your theme
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_URL,
+  timeout: API_TIMEOUT,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 // POST request to /index
 export const postData = async (query, topic, dateFrom, dateTo) => {
   try {
-    const response = await axios.post(
-      `${API_URL}/index`,
-      {
-        query: query,
-        topic: topic,
-        date: `${dateFrom} to ${dateTo}`, // Format: "DD-MM-YYYY to DD-MM-YYYY"
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: API_TIMEOUT,
-      }
-    );
+    const response = await api.post('/index', {
+      query,
+      topic,
+      date: `${dateFrom} to ${dateTo}`,
+    });
 
     return {
       success: true,
-      data: response.data, // Should contain { id, status }
+      data: response.data,
+      status: response.status,
     };
   } catch (error) {
-    return {
-      success: false,
-      error: error.response?.data?.detail || 
-            error.message || 
-            'Failed to submit request',
-    };
+    return handleApiError(error);
   }
 };
 
-// GET request to /loading (with polling)
-export const fetchResults = async (id, maxAttempts = 10, interval = 3000) => {
+// GET request to /loading with polling
+export const fetchResults = async (id, maxAttempts = 5, interval = 3000) => {
   try {
     let attempts = 0;
     
     const poll = async () => {
       attempts++;
-      const response = await axios.get(`${API_URL}/loading?id=${id}`, {
-        timeout: API_TIMEOUT,
-      });
+      const response = await api.get(`/loading?id=${id}`);
 
       if (response.data.status === 'completed') {
         return {
           success: true,
           data: response.data,
+          status: response.status,
         };
       }
 
@@ -58,29 +54,74 @@ export const fetchResults = async (id, maxAttempts = 10, interval = 3000) => {
         return {
           success: false,
           error: 'Maximum polling attempts reached',
+          status: 408,
         };
       }
 
-      // Wait before next attempt
       await new Promise(resolve => setTimeout(resolve, interval));
       return poll();
     };
 
     return await poll();
   } catch (error) {
-    return {
-      success: false,
-      error: error.code === 'ECONNABORTED' 
-            ? 'Request timeout' 
-            : error.response?.data?.detail || error.message,
-    };
+    return handleApiError(error);
   }
 };
 
-// Utility function to cancel requests
+// Centralized error handler
+const handleApiError = (error) => {
+  if (error.code === 'ECONNABORTED') {
+    return {
+      success: false,
+      error: 'Request timeout',
+      status: 408,
+    };
+  }
+
+  if (error.response) {
+    // Server responded with error status (4xx, 5xx)
+    return {
+      success: false,
+      error: error.response.data?.detail || error.response.statusText,
+      status: error.response.status,
+    };
+  }
+
+  if (error.request) {
+    // No response received
+    return {
+      success: false,
+      error: 'No response from server',
+      status: 503,
+    };
+  }
+
+  // Other errors
+  return {
+    success: false,
+    error: error.message || 'Unknown error occurred',
+    status: 500,
+  };
+};
+
+// Request cancellation
 let cancelTokenSource = axios.CancelToken.source();
 
 export const cancelRequests = () => {
-  cancelTokenSource.cancel('Operation canceled by user');
-  cancelTokenSource = axios.CancelToken.source(); // Reset for future requests
+  cancelTokenSource.cancel(`Operation canceled by user`);
+  cancelTokenSource = axios.CancelToken.source(); // Reset token
 };
+
+// Add interceptors for consistent error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add request interceptor to include cancel token
+api.interceptors.request.use((config) => {
+  config.cancelToken = cancelTokenSource.token;
+  return config;
+});
