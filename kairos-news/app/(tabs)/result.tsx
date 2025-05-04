@@ -1,28 +1,13 @@
 import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, StyleSheet } from 'react-native';
 import { TypeAnimation } from 'react-type-animation';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function resultQuery() {
-  const [query, setQuery,] = useState('');
-  const [topic, setTopic] = useState('');
-  useEffect(() => {
-    const loadQuery = async () => {
-      const name = await AsyncStorage.getItem('query');
-      if (name) setQuery(name);
-    };
-    loadQuery();
-  }, []);
-
-  useEffect(() => {
-    const loadTopic = async () => {
-      const name = await AsyncStorage.getItem('topic');
-      if (name) setTopic(name);
-    };
-    loadTopic();
-  }, []);
 
 
+  const { id, query, topic } = useLocalSearchParams();
+  console.log({ id, query, topic });
   return (
     <View style={styles.container}>
       <View>

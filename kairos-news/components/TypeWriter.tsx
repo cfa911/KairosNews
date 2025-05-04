@@ -20,16 +20,22 @@ const Typewriter: React.FC<TypewriterProps> = ({
 
   useEffect(() => {
     let index = 0;
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + text.charAt(index));
-      index++;
-      if (index === text.length) {
-        clearInterval(interval);
-        if (onComplete) onComplete();
-      }
-    }, speed);
 
-    return () => clearInterval(interval);
+    const typeCharacter = () => {
+      if (index <= text.length) {
+        setDisplayedText(text.substring(0, index)); // Use substring to ensure consistency
+        index++;
+        setTimeout(typeCharacter, speed); // Schedule the next character
+      } else if (onComplete) {
+        onComplete(); // Call onComplete when typing is finished
+      }
+    };
+
+    typeCharacter(); // Start typing
+
+    return () => {
+      index = text.length; // Cleanup to prevent further updates
+    };
   }, [text, speed, onComplete]);
 
   return (

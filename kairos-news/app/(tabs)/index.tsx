@@ -1,29 +1,56 @@
-import { View, Text, StyleSheet, TextInput, Keyboard, Image, Button,Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Keyboard, Image, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FadeInView from '@/components/FadeInView';
 import Typewriter from '@/components/TypeWriter';
 import React from 'react';
-import { postData } from '@/utils/api.js'; // Adjust the import path as necessary
+import { cancelRequests, postData } from '@/utils/api.js'; // Adjust the import path as necessary
+import DateRangeModal from '@/components/DateRangeModal';
 
 export default function TabOneScreen() {
   const [showSecondButton, setShowSecondButton] = useState(false);
-
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [topic, setTopic] = useState('');
-  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dateFrom, setDateFrom] = useState('17-07-1998');
+  const [dateTo, setDateTo] = useState('20-12-2025');
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [dateRange, setDateRange] = useState({
+    startDate: '2020/01',
+    endDate: '2025/12'
+  });
+
+  // Clean up pending requests when component unmounts
+  useEffect(() => {
+    return () => cancelRequests();
+  }, []);
 
   const handleSubmit = async () => {
-    const result = await postData(query, topic, '17-07-1998', '20-12-2025');
-    if (result.success) {
-      router.push({
-        pathname: '/loading',
-        params: { id: result.data.id }  // Pass ID to loading screen
-      });
-    } else {
-      Alert.alert('Error', result.error);
+    setIsSubmitting(true);
+    try {
+      const result = await postData(query, topic, dateFrom, dateTo);
+
+      if (result.success) {
+        router.push({
+          pathname: '/loading',
+          params: {
+            id: result.data.id,
+            query: query,
+            topic: topic,
+            dateInterval: `${dateFrom} to ${dateTo}`
+          }
+        });
+      } else {
+        Alert.alert('Submission Error', result.error || 'Failed to submit data');
+      }
+    } catch (error) {
+      Alert.alert('Network Error', 'Could not connect to the server');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -46,32 +73,37 @@ export default function TabOneScreen() {
           autoFocus
         />
         {/* <EditScreenInfo path="app/(tabs)/index.tsx" /> */}
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <View  style={{ flex: 2 ,justifyContent: 'center', alignItems: 'center' }}>
-            <Button title="Filtros Avançados" color= '#13ed8c'  onPress={() => {
+        <View style={{ flex: 1, }}>
+          <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
+            <Button title="Filtros Avançados" color='#13ed8c' onPress={() => {
               setShowSecondButton(true);
             }} />
           </View>
           <View style={{ flex: 1 }}>
-          {showSecondButton && (
-            <FadeInView style={{ flex: 1, flexDirection: 'row',alignItems: 'stretch'  }}>
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <Button title="Escolha uma Data" onPress={() => {
-              }} />
+            <FadeInView style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} start={showSecondButton} initialOpacity={0} >
+              <View style={{ flex: 1 }}>
+                <Button title="Inserir Datas" disabled={!showSecondButton} onPress={() => {
+                  setModalVisible(true)
+                }} />
               </View>
-              <View>
-              <Button title="Insira um topico" onPress={() => {
-              }} />
+              <View style={{ flex: 1 }}>
+                <Button title="Insira um topico" disabled={!showSecondButton} onPress={() => {
+                }} />
               </View>
             </FadeInView>
-          )}
+
           </View>
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Typewriter speed={20} textStyle={styles.nota} text={"   Exprimente adicionar filtros para uma pesquisa mais minuciosa   "} />
+          <Typewriter speed={20} textStyle={styles.nota} text={"Exprimente adicionar filtros para uma pesquisa mais minuciosa   "} />
         </View>
-
-
+        <View >
+          <DateRangeModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onDateSelect={(range) => setDateRange(range)}
+          />
+        </View>
       </View>
     </View>
   );
