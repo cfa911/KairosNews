@@ -7,7 +7,7 @@ export default function KairosNewsTitle() {
   const navigation = useRouter();
 
   const onPress = () => {
-    navigation.push({ pathname: '/(tabs)' }); // Replace 'Home' with the name of your index route
+    navigation.push({ pathname: '/' }); // Replace 'Home' with the name of your index route
   };
 
   return (

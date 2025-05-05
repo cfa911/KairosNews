@@ -66,7 +66,7 @@ export default function Loading() {
           <Text style={styles.errorMessage}>{error}</Text>
           <TouchableOpacity
             style={styles.retryButton}
-            onPress={() => router.push({ pathname: '/(tabs)' })}
+            onPress={() => router.push({ pathname: '/' })}
           >
             <Text style={styles.buttonText}>Go Back</Text>
           </TouchableOpacity>
@@ -76,26 +76,26 @@ export default function Loading() {
     );
   }
   return (
-  <View style={{ flex: 1,}}>
-    <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
-      <HeadKairoNews />
-    </View>
-    <View style={styles.container}>
-      <ActivityIndicator size={100} color="#13ed8c" />
-      <View style={{ marginTop: 20 }}>
-        <FadeInView duration={2000} cycle={true}>
-          <Text style={styles.text}>Recolhendo noticias...</Text>
-        </FadeInView>
+    <View style={{ flex: 1, }}>
+      <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
+        <HeadKairoNews />
       </View>
-    </View>
-  </View>);
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size={100} color="#13ed8c" />
+        <View style={{ marginTop: 20 }}>
+          <FadeInView duration={2000} cycle={true}>
+            <Text style={styles.text}>Recolhendo noticias...</Text>
+          </FadeInView>
+        </View>
+      </View>
+    </View>);
 
 
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 4,
+    flex: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#101218',

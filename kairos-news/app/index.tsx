@@ -5,7 +5,7 @@ import Typewriter from '@/components/TypeWriter';
 import { cancelRequests, postData } from '@/utils/api.js'; // Adjust the import path as necessary
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TextInput, View, Image, Pressable } from 'react-native';
 
 export default function TabOneScreen() {
   const [showSecondButton, setShowSecondButton] = useState(false);
@@ -58,22 +58,34 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{ flex: 0.8, justifyContent: 'flex-end', alignItems: 'center' }}>
+      <View style={{ alignItems: 'flex-end', flex: 0.4, justifyContent: 'flex-end' }}>
+        <Image
+          source={require('../assets/images/arquivo.png')}
+          style={{ width: 230, resizeMode: 'contain', }}
+        />
+      </View>
+      <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
         <FadeInView style={styles.title}>
           <Text style={styles.kairo}>Kairos<Text style={styles.news}>News</Text></Text>
         </FadeInView>
       </View>
-
-      <View style={styles.searchContainer} >
-        <TextInput
-          style={styles.searchBar}
-          placeholder="De que se vai informar hoje?"
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={handleSubmit}
-          returnKeyType="done"
-          autoFocus
-        />
+      <View style={styles.searchContainer}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TextInput
+            style={[styles.searchBar, { flex: 1 }]}
+            placeholder="De que se vai informar hoje?"
+            value={query}
+            onChangeText={setQuery}
+            onSubmitEditing={handleSubmit}
+            returnKeyType="done"
+            autoFocus
+          />
+          <Pressable onPress={handleSubmit} disabled={isSubmitting}>
+            <View style={{ marginLeft: 10, backgroundColor: '#13ed8c', padding: 12, paddingVertical: 3,paddingBottom:5, borderRadius: 50 }}>
+              <Text style={{fontSize:25,fontWeight:'bold',color:'#ffffff'}}>{'>'}</Text>
+            </View>
+          </Pressable>
+        </View>
         <View style={{ flex: 1, }}>
           <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
             <Button title="Filtros Avançados" color='#13ed8c' onPress={() => {
@@ -82,12 +94,12 @@ export default function TabOneScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <FadeInView style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} start={showSecondButton} initialOpacity={0} >
-              <View style={{ flex: 1 ,justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Button title="Inserir Datas" disabled={!showSecondButton} onPress={() => {
                   setModalVisible(true)
                 }} />
               </View>
-              <View style={{ flex: 1 , justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Button title="Insira um topico" disabled={!showSecondButton} onPress={() => {
                   setSelectedVisible(true)
                 }} />
@@ -97,7 +109,7 @@ export default function TabOneScreen() {
           </View>
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Typewriter speed={20} textStyle={styles.nota} text={"Exprimente adicionar filtros para uma pesquisa mais minuciosa   "} />
+          <Typewriter speed={20} textStyle={styles.nota} text={"Exprimente adicionar filtros para uma pesquisa mais minuciosa. Além disso as noticias são primariamente relevantes a 2020-2023"} />
         </View>
         <View >
           <DateRangeModal
@@ -115,10 +127,16 @@ export default function TabOneScreen() {
             }}
             title="Selecione um tópico"
             options={[
-              'Estilo de Vida e Lazer', 'Arte e Cultura','Desporto','Ciencia', 'Crime', 
-              'Conflitos e Desastres',  
-              'Saúde', 'Economia e Sociedade', 
+              'Estilo de Vida e Lazer', 'Arte e Cultura', 'Desporto', 'Ciencia', 'Crime',
+              'Conflitos e Desastres',
+              'Saúde', 'Economia e Sociedade',
             ]}
+          />
+        </View>
+        <View style={{ alignItems: 'stretch', flex: 1, backgroundColor: 'blu', justifyContent: 'flex-end', width: '100%' }}>
+          <Image
+            source={require('../assets/images/footer.png')}
+            style={{ width: '100%', height: '60%', resizeMode: 'contain' }}
           />
         </View>
       </View>

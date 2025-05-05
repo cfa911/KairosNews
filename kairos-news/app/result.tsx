@@ -14,8 +14,8 @@ export default function resultQuery() {
     <ScrollView style={styles.mainContainer}>
       <HeadKairoNews />
       <View style={{ marginTop: 20,  marginHorizontal: '5%', flex: 1, }}>
-        <View style={{ borderWidth: 2, borderColor: '#ffffff', borderRadius: 10, padding: 10, backgroundColor: '#101218', marginBottom: 30, marginTop: 15 }}>
-          <Text style={{ fontSize: 25, color: '#ffffff', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Valores da Pesquisa</Text>
+        <View style={{ borderWidth: 2, borderColor: '#ffffff', borderRadius: 10, padding: 10, backgroundColor: '#ffffff', marginBottom: 30, marginTop: 15 }}>
+          <Text style={{ fontSize: 25, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Valores da Pesquisa</Text>
         </View>
         <View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -39,8 +39,8 @@ export default function resultQuery() {
       </View>
       <View>
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={{ borderWidth: 2, borderColor:'#13ed8c' , borderRadius: 10, padding: 10, backgroundColor: '#101218', marginBottom: 30, marginTop: 15 }}>
-            <Text style={{ fontSize: 30, color: '#13ed8c', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Sumario Gerado</Text>
+          <View style={{ borderWidth: 2, backgroundColor: '#13ed8c',borderColor:'#13ed8c' , borderRadius: 10, padding: 10, marginBottom: 30, marginTop: 15 }}>
+            <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Sumário Gerado</Text>
           </View>
           <Typewriter
             text={typeof summary === 'string' ? summary : summary.join(' ')}
@@ -50,8 +50,8 @@ export default function resultQuery() {
         </ScrollView>
       </View>
       <View style={styles.container}>
-          <View style={{ borderWidth: 2, borderColor:'#085C8E' , borderRadius: 10, padding: 10, backgroundColor: '#101218', marginBottom: 30, marginTop: 15 }}>
-            <Text style={{ fontSize: 30, color: '#085C8E', textAlign: 'center', fontFamily: 'Bahnschrift',fontWeight:'bold' }}>Noticias Utilizadas</Text>
+          <View style={{ borderWidth: 2, borderColor:'#085C8E' , borderRadius: 10, padding: 10, backgroundColor: '#085C8E', marginBottom: 30, marginTop: 15 }}>
+            <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Noticias Utilizadas</Text>
           </View>
           {sourcesArray.map((source: string, index: number) => (
             <Text
