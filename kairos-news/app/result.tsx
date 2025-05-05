@@ -11,11 +11,11 @@ export default function resultQuery() {
   const sourcesArray = typeof sources === 'string' ? JSON.parse(sources) : [];
 
   return (
-    <ScrollView style={styles.mainContainer}>
+    <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
       <HeadKairoNews />
       <View style={{ marginTop: 20,  marginHorizontal: '5%', flex: 1, }}>
-        <View style={{ borderWidth: 2, borderColor: '#ffffff', borderRadius: 10, padding: 10, backgroundColor: '#ffffff', marginBottom: 30, marginTop: 15 }}>
-          <Text style={{ fontSize: 25, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Valores da Pesquisa</Text>
+        <View style={{ borderWidth: 2, borderColor: '#13ed8c', borderRadius: 10, padding: 10, backgroundColor: '#13ed8c', marginBottom: 30, marginTop: 15 }}>
+          <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Valores da Pesquisa</Text>
         </View>
         <View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -33,13 +33,14 @@ export default function resultQuery() {
             <View style={{ flex: 1 }}>
               <Text style={styles.titulo}>Data: </Text>
               <Text style={styles.tituloPrompts}>"{dateInterval}"</Text>
+              
             </View>
           </View>
         </View>
       </View>
       <View>
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={{ borderWidth: 2, backgroundColor: '#13ed8c',borderColor:'#13ed8c' , borderRadius: 10, padding: 10, marginBottom: 30, marginTop: 15 }}>
+          <View style={{ borderWidth: 2, backgroundColor: '#0BBF70',borderColor:'#0BBF70' , borderRadius: 10, padding: 10, marginBottom: 30, marginTop: 15 }}>
             <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Sumário Gerado</Text>
           </View>
           <Typewriter
@@ -50,7 +51,7 @@ export default function resultQuery() {
         </ScrollView>
       </View>
       <View style={styles.container}>
-          <View style={{ borderWidth: 2, borderColor:'#085C8E' , borderRadius: 10, padding: 10, backgroundColor: '#085C8E', marginBottom: 30, marginTop: 15 }}>
+          <View style={{ borderWidth: 2, borderColor:'#077A48' , borderRadius: 10, padding: 10, backgroundColor: '#077A48', marginBottom: 30, marginTop: 15 }}>
             <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Noticias Utilizadas</Text>
           </View>
           {sourcesArray.map((source: string, index: number) => (

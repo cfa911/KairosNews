@@ -58,11 +58,19 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{ alignItems: 'flex-end', flex: 0.4, justifyContent: 'flex-end' }}>
-        <Image
-          source={require('../assets/images/arquivo.png')}
-          style={{ width: 230, resizeMode: 'contain', }}
-        />
+      {/* Add the About button */}
+      <View>
+        <View style={{ alignItems: 'flex-end', marginVertical: 15, marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Pressable onPress={() => router.push('/about')}>
+            <Text style={{ color: '#13ed8c', fontSize: 30, fontWeight: 600 , fontFamily:'Bahnschrift',}}>Sobre</Text>
+          </Pressable>
+        </View>
+        <View style={{ alignItems: 'flex-end', flex: 0.4, justifyContent: 'flex-end' }}>
+          <Image
+            source={require('../assets/images/arquivo.png')}
+            style={{ width: 230, resizeMode: 'contain', }}
+          />
+        </View>
       </View>
       <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
         <FadeInView style={styles.title}>
@@ -81,8 +89,8 @@ export default function TabOneScreen() {
             autoFocus
           />
           <Pressable onPress={handleSubmit} disabled={isSubmitting}>
-            <View style={{ marginLeft: 10, backgroundColor: '#13ed8c', padding: 12, paddingVertical: 3,paddingBottom:5, borderRadius: 50 }}>
-              <Text style={{fontSize:25,fontWeight:'bold',color:'#ffffff'}}>{'>'}</Text>
+            <View style={{ marginLeft: 10, backgroundColor: '#13ed8c', padding: 12, paddingVertical: 3, paddingBottom: 5, borderRadius: 50 }}>
+              <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#ffffff' }}>{'>'}</Text>
             </View>
           </Pressable>
         </View>
@@ -95,12 +103,12 @@ export default function TabOneScreen() {
           <View style={{ flex: 1 }}>
             <FadeInView style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} start={showSecondButton} initialOpacity={0} >
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Button title="Inserir Datas" disabled={!showSecondButton} onPress={() => {
+                <Button title="Inserir Datas" color={'#077A48'} disabled={!showSecondButton} onPress={() => {
                   setModalVisible(true)
                 }} />
               </View>
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Button title="Insira um topico" disabled={!showSecondButton} onPress={() => {
+                <Button title="Insira um topico" color={'#077A48'} disabled={!showSecondButton} onPress={() => {
                   setSelectedVisible(true)
                 }} />
               </View>
@@ -133,14 +141,14 @@ export default function TabOneScreen() {
             ]}
           />
         </View>
-        <View style={{ alignItems: 'stretch', flex: 1, backgroundColor: 'blu', justifyContent: 'flex-end', width: '100%' }}>
+        <View style={{ alignItems: 'stretch', flex: 1, justifyContent: 'flex-end', width: '100%' }}>
           <Image
             source={require('../assets/images/footer.png')}
             style={{ width: '100%', height: '60%', resizeMode: 'contain' }}
           />
         </View>
       </View>
-    </View>
+    </View >
   );
 }
 

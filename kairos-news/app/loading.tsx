@@ -1,17 +1,16 @@
+import React, { useEffect, useState } from 'react';
 import FadeInView from '@/components/FadeInView';
 import HeadKairoNews from '@/components/HeadKairoNews';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { cancelRequests, fetchResults } from '../utils/api';
-
-
 
 export default function Loading() {
   const router = useRouter();
   const { id, query, topic, dateInterval, sources, summary } = useLocalSearchParams();
   const [timeoutReached, setTimeoutReached] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingText, setLoadingText] = useState('Recolhendo noticias...');
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -35,7 +34,7 @@ export default function Loading() {
               dateInterval: dateInterval,
               sources: JSON.stringify(result.data.result.sources),
               summary: JSON.stringify(result.data.result.summary),
-            }
+            },
           });
         } else {
           setError(result.error || 'Failed to load results');
@@ -54,9 +53,24 @@ export default function Loading() {
     };
   }, []);
 
+  useEffect(() => {
+    const messages = [
+      'Recolhendo noticias...',
+      'Processando dados...',
+      'Quase pronto...',
+    ];
+    let index = 0;
+
+    const intervalId = setInterval(() => {
+      index = (index + 1) % messages.length;
+      setLoadingText(messages[index]);
+    }, 4000); // Change text every 4 seconds
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   if (error) {
     return (
-
       <View>
         <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
           <HeadKairoNews />
@@ -72,25 +86,24 @@ export default function Loading() {
           </TouchableOpacity>
         </View>
       </View>
-
     );
   }
+
   return (
-    <View style={{ flex: 1, }}>
+    <View style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
         <HeadKairoNews />
       </View>
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View style={[styles.container, { justifyContent: 'flex-start', flex: 1, alignItems: 'center' }]}>
         <ActivityIndicator size={100} color="#13ed8c" />
         <View style={{ marginTop: 20 }}>
           <FadeInView duration={2000} cycle={true}>
-            <Text style={styles.text}>Recolhendo noticias...</Text>
+            <Text style={styles.text}>{loadingText}</Text>
           </FadeInView>
         </View>
       </View>
-    </View>);
-
-
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -99,12 +112,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#101218',
-
   },
   text: {
     color: '#ffffff',
     fontSize: 30,
-
   },
   loadingText: {
     marginTop: 20,
@@ -124,20 +135,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
   },
-  infoBox: {
-    marginTop: 30,
-    padding: 15,
-    backgroundColor: '#2d2d3a',
-    borderRadius: 8,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#3d3d4a',
-  },
-  infoText: {
-    color: '#a0a0a0',
-    marginBottom: 5,
-    fontSize: 14,
-  },
   retryButton: {
     backgroundColor: '#13ed8c',
     paddingVertical: 12,
@@ -151,7 +148,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-// Export Loading as a named export
-export { Loading };
-
