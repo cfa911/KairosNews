@@ -19,8 +19,8 @@ export default function TabOneScreen() {
 
 
   const [dateRange, setDateRange] = useState({
-    startDate: '2020/01',
-    endDate: '2024/12'
+    start_date: '2020-01',
+    end_date: '2024-12'
   });
 
   // Clean up pending requests when component unmounts
@@ -62,7 +62,7 @@ export default function TabOneScreen() {
       <View>
         <View style={{ alignItems: 'flex-end', marginVertical: 15, marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Pressable onPress={() => router.push('/about')}>
-            <Text style={{ color: '#13ed8c', fontSize: 30, fontWeight: 600 , fontFamily:'Bahnschrift',}}>Sobre</Text>
+            <Text style={{ color: '#13ed8c', fontSize: 30, fontWeight: 600, fontFamily: 'Bahnschrift', }}>Sobre</Text>
           </Pressable>
         </View>
         <View style={{ alignItems: 'flex-end', flex: 0.4, justifyContent: 'flex-end' }}>
@@ -72,7 +72,7 @@ export default function TabOneScreen() {
           />
         </View>
       </View>
-      <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
         <FadeInView style={styles.title}>
           <Text style={styles.kairo}>Kairos<Text style={styles.news}>News</Text></Text>
         </FadeInView>
@@ -101,7 +101,7 @@ export default function TabOneScreen() {
             }} />
           </View>
           <View style={{ flex: 1 }}>
-            <FadeInView style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} start={showSecondButton} initialOpacity={0} >
+            <FadeInView style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10 }} start={showSecondButton} initialOpacity={0} >
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Button title="Inserir Datas" color={'#077A48'} disabled={!showSecondButton} onPress={() => {
                   setModalVisible(true)
@@ -123,7 +123,7 @@ export default function TabOneScreen() {
           <DateRangeModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
-            onDateSelect={(range) => setDateRange(range)}
+            onDateSelect={(range) => setDateRange({ start_date: range.startDate, end_date: range.endDate })}
           />
         </View>
         <View >

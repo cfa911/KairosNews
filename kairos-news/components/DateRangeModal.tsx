@@ -1,6 +1,6 @@
 // components/DateRangeModal.js
 import { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface DateRangeModalProps {
   visible: boolean;
@@ -18,7 +18,7 @@ const DateRangeModal: React.FC<DateRangeModalProps> = ({ visible, onClose, onDat
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
   const handleConfirm = () => {
-    const format = (year: number, month: number): string => `${year}/${month.toString().padStart(2, '0')}`;
+    const format = (year: number, month: number): string => `${year}-${month.toString().padStart(2, '0')}`;
     onDateSelect({
       startDate: format(startYear, startMonth),
       endDate: format(endYear, endMonth),
