@@ -6,8 +6,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { checkJobStatus, createJob, isJobCompletedOrFailed } from '@/utils/api';
-import { configureProps } from 'react-native-reanimated/lib/typescript/ConfigHelper';
+import { checkJobStatus, createJob } from '@/utils/api';
 
 export default function TabOneScreen() {
   const [showSecondButton, setShowSecondButton] = useState(false);
@@ -22,7 +21,7 @@ export default function TabOneScreen() {
   const { response: initialResponse } = useLocalSearchParams();
   const [dateRange, setDateRange] = useState({
     start_date: '2020-01',
-    end_date: '2024-12'
+    end_date: '2020-02'
   });
 
 
@@ -31,6 +30,57 @@ export default function TabOneScreen() {
   const lastDay = new Date(endYear, endMonth, 0).getDate();
   const formattedEnd = `${dateRange.end_date}-${lastDay}`;
   const lowerCaseTopic = topic.toLowerCase();
+
+const navigateToResult = async (id: any) => {
+  try {
+
+  
+    let response = await checkJobStatus(id);
+    console.log('Response Final Data:', response.result.articles);
+    if (response.status === 'completed' && response.result.articles.length > 0) {
+      console.log('Job completed successfully:', response.result);
+      router.push({
+        pathname: '/result',
+        params: {
+          id: response.id, // Assuming the response contains an `id` field
+          query: query,
+          topic: lowerCaseTopic,
+          start_date: formattedStart,
+          end_date: formattedEnd,
+          response: response, // Pass the response as a string
+          summary: response.result.summary, // Assuming the response contains a `result` field
+          articles: JSON.stringify(response.result.articles),
+        },
+      });
+    } else if (response.status === 'failed' || response.result.articles.length == 0) {
+      console.error('Job failed:', response.error);
+      router.push({
+        pathname: '/result',
+        params: {
+          id: response.id, // Assuming the response contains an `id` field
+          query: query,
+          topic: lowerCaseTopic,
+          start_date: formattedStart,
+          end_date: formattedEnd,
+          response: response, // Pass the response as a string
+          summary: 'Ocorreu um erro ao processar a pesquisa. Por favor, tente novamente mais tarde.',
+          articles: null, // Assuming the response contains a `result` field
+        },
+      });
+
+    } else {
+      console.log('Job status:', response.status);
+      response = await checkJobStatus(id);
+      navigateToResult(id);
+    }
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+}
+
+
 
 
   const handleSubmit = async () => {
@@ -55,38 +105,15 @@ export default function TabOneScreen() {
       const response = await createJob(requestData);
       // Use the parsed data (example: logging it)
       console.log('Response Data:', response);
-      
-
-
-      // Navigate to the result page with parameters
-      while (!isJobCompletedOrFailed(response.id)) {
-        
-        const arrayResponse = JSON.parse(response);
-        console.log('arrayResponse:', arrayResponse);
-
-
-        router.push({
-          pathname: '/result',
-          params: {
-            id: response.id, // Assuming the response contains an `id` field
-            query: query,
-            topic: lowerCaseTopic,
-            start_date: formattedStart,
-            end_date: formattedEnd,
-            response: JSON.stringify(response), // Pass the response as a string
-          },
-        });
-      }
-
+      navigateToResult(response.id); // Pass the job ID to the result page
 
 
     } catch (error) {
-      Alert.alert('Erro', 'Ocorreu um erro ao enviar a solicitação.');
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao enviar a pesquisa. Por favor, tente novamente.');
     }
-  };
-
+    setIsSubmitting(false);
+  }
 
 
 
@@ -151,7 +178,7 @@ export default function TabOneScreen() {
           </View>
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Typewriter speed={20} textStyle={styles.nota} text={"Exprimente adicionar filtros para uma pesquisa mais minuciosa. Além disso as noticias são primariamente relevantes a 2020-2023"} />
+          <Typewriter speed={20} textStyle={styles.nota} text={"Experimente adicionar filtros para uma pesquisa mais minuciosa. Além disso as noticias são primariamente relevantes a 2020-2023"} />
         </View>
         <View >
           <DateRangeModal

@@ -1,13 +1,14 @@
 import HeadKairoNews from '@/components/HeadKairoNews';
-import { checkJobStatus } from '@/utils/api';
+import Typewriter from '@/components/TypeWriter';
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function resultQuery() {
+  const { id, query, topic, start_date, end_date, summary, articles } = useLocalSearchParams();
 
-
-  const { id, query, topic, start_date, end_date,response } = useLocalSearchParams();
-  console.log('response:', response);
+  const sumario = summary as string;
+  const parsedArticles = articles ? JSON.parse(articles as string) : [];
+  console.log('Parsed Articles:', parsedArticles);
   return (
     <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
       <HeadKairoNews />
@@ -41,33 +42,31 @@ export default function resultQuery() {
           <View style={{ borderWidth: 2, backgroundColor: '#0BBF70', borderColor: '#0BBF70', borderRadius: 10, padding: 10, marginBottom: 30, marginTop: 15 }}>
             <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Sumário Gerado</Text>
           </View>
-          {/* <Typewriter
-            text={summary}
+          <Typewriter
+            text={sumario}
             speed={3}
             textStyle={styles.conteudo}
-          /> */}
+          />
         </ScrollView>
-      </View>
-      <View style={styles.container}>
-        <View style={{ borderWidth: 2, borderColor: '#077A48', borderRadius: 10, padding: 10, backgroundColor: '#077A48', marginBottom: 30, marginTop: 15 }}>
-          <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Noticias Utilizadas</Text>
+        <View style={styles.container}>
+          <View style={{ borderWidth: 2, borderColor: '#077A48', borderRadius: 10, padding: 10, backgroundColor: '#077A48', marginBottom: 30, marginTop: 15 }}>
+            <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Noticias Utilizadas</Text>
+          </View>
+          {parsedArticles.map((article: any, index: number) => (
+            <View key={index} >
+              <Text style={styles.link} onPress={() => Linking.openURL(article.url)}>
+              <Text  style={styles.unlinked}>Artigo:</Text> {article.url}
+              </Text>
+              <Text style={styles.conteudo}>Grau de correlação: {1 - article.distance}</Text>
+            </View>
+          ))}
         </View>
-        {/* {sourcesArray.map((source: string, index: number) => (
-          <Text
-            key={index}
-            style={{ color: '#13ed8c', fontSize: 18, marginBottom: 10, textDecorationLine: 'underline' }}
-            onPress={() => {
-              if (source.startsWith('http')) {
-                Linking.openURL(source);
-              }
-            }}
-          >
-            {source}
-          </Text> */}
-
+        <View style={styles.container} >
+          
+        </View>
       </View>
-    </ScrollView >
-  );
+    </ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -85,4 +84,6 @@ const styles = StyleSheet.create({
   titulo: { fontSize: 25, color: '#13ed8c', textAlign: 'center', fontFamily: 'Bahnschrift', },
   tituloPrompts: { fontSize: 20, color: '#ffffff', textAlign: 'center', fontFamily: 'Bahnschrift', },
   conteudo: { color: '#ffffff', fontFamily: 'Bahnschrift', fontSize: 20 },
+  link: { color: '#6495ED',  fontSize: 20, },
+  unlinked: { color: '#ffffff', fontSize: 20, },
 });

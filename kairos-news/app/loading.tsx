@@ -1,15 +1,53 @@
 import FadeInView from '@/components/FadeInView';
 import HeadKairoNews from '@/components/HeadKairoNews';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { checkJobStatus } from '@/utils/api'; // Make sure this matches your API utility
 
 export default function Loading() {
   const [timeoutReached, setTimeoutReached] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loadingText, setLoadingText] = useState('Recolhendo noticias...');
   const [pollingCount, setPollingCount] = useState(0);
+
+
+  useEffect(() => {
+    const messages = [
+      'Recolhendo noticias...',
+      'Processando dados...',
+      'Quase pronto...',
+    ];
+    let index = 0;
+
+    const intervalId = setInterval(() => {
+      index = (index + 1) % messages.length;
+      setLoadingText(messages[index]);
+    }, 4000); // Change text every 4 seconds
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  if (error) {
+    return (
+      <View>
+        <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
+          <HeadKairoNews />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.errorText}>⚠️ Error</Text>
+          <Text style={styles.errorMessage}>{error}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => router.push({ pathname: '/' })}
+          >
+            <Text style={styles.buttonText}>Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
