@@ -1,19 +1,17 @@
 import HeadKairoNews from '@/components/HeadKairoNews';
-import Typewriter from '@/components/TypeWriter';
+import { checkJobStatus } from '@/utils/api';
 import { useLocalSearchParams } from 'expo-router';
-import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function resultQuery() {
 
 
-  const { id, query, topic, dateInterval,sources,summary } = useLocalSearchParams();
-
-  const sourcesArray = typeof sources === 'string' ? JSON.parse(sources) : [];
-
+  const { id, query, topic, start_date, end_date,response } = useLocalSearchParams();
+  console.log('response:', response);
   return (
     <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
       <HeadKairoNews />
-      <View style={{ marginTop: 20,  marginHorizontal: '5%', flex: 1, }}>
+      <View style={{ marginTop: 20, marginHorizontal: '5%', flex: 1, }}>
         <View style={{ borderWidth: 2, borderColor: '#13ed8c', borderRadius: 10, padding: 10, backgroundColor: '#13ed8c', marginBottom: 30, marginTop: 15 }}>
           <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Valores da Pesquisa</Text>
         </View>
@@ -32,41 +30,41 @@ export default function resultQuery() {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.titulo}>Data: </Text>
-              <Text style={styles.tituloPrompts}>"{dateInterval}"</Text>
-              
+              <Text style={styles.tituloPrompts}>"{start_date} / {end_date}"</Text>
+
             </View>
           </View>
         </View>
       </View>
       <View>
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-          <View style={{ borderWidth: 2, backgroundColor: '#0BBF70',borderColor:'#0BBF70' , borderRadius: 10, padding: 10, marginBottom: 30, marginTop: 15 }}>
+          <View style={{ borderWidth: 2, backgroundColor: '#0BBF70', borderColor: '#0BBF70', borderRadius: 10, padding: 10, marginBottom: 30, marginTop: 15 }}>
             <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Sumário Gerado</Text>
           </View>
-          <Typewriter
-            text={typeof summary === 'string' ? summary : summary.join(' ')}
+          {/* <Typewriter
+            text={summary}
             speed={3}
             textStyle={styles.conteudo}
-          />
+          /> */}
         </ScrollView>
       </View>
       <View style={styles.container}>
-          <View style={{ borderWidth: 2, borderColor:'#077A48' , borderRadius: 10, padding: 10, backgroundColor: '#077A48', marginBottom: 30, marginTop: 15 }}>
-            <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Noticias Utilizadas</Text>
-          </View>
-          {sourcesArray.map((source: string, index: number) => (
-            <Text
-              key={index}
-              style={{ color: '#13ed8c', fontSize: 18, marginBottom: 10, textDecorationLine: 'underline' }}
-              onPress={() => {
-                if (source.startsWith('http')) {
-                  Linking.openURL(source);
-                }
-              }}
-            >
-              {source}
-            </Text>
-          ))}
+        <View style={{ borderWidth: 2, borderColor: '#077A48', borderRadius: 10, padding: 10, backgroundColor: '#077A48', marginBottom: 30, marginTop: 15 }}>
+          <Text style={{ fontSize: 30, color: '#000000', textAlign: 'center', fontFamily: 'Bahnschrift', }}>Noticias Utilizadas</Text>
+        </View>
+        {/* {sourcesArray.map((source: string, index: number) => (
+          <Text
+            key={index}
+            style={{ color: '#13ed8c', fontSize: 18, marginBottom: 10, textDecorationLine: 'underline' }}
+            onPress={() => {
+              if (source.startsWith('http')) {
+                Linking.openURL(source);
+              }
+            }}
+          >
+            {source}
+          </Text> */}
+
       </View>
     </ScrollView >
   );

@@ -2,10 +2,12 @@ import DateRangeModal from '@/components/DateRangeModal';
 import FadeInView from '@/components/FadeInView';
 import SelectionModal from '@/components/SelectionModal';
 import Typewriter from '@/components/TypeWriter';
-import { cancelRequests, postData } from '@/utils/api.js'; // Adjust the import path as necessary
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View, Image, Pressable } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+
+import { checkJobStatus, createJob, isJobCompletedOrFailed } from '@/utils/api';
+import { configureProps } from 'react-native-reanimated/lib/typescript/ConfigHelper';
 
 export default function TabOneScreen() {
   const [showSecondButton, setShowSecondButton] = useState(false);
@@ -17,37 +19,69 @@ export default function TabOneScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedVisible, setSelectedVisible] = useState(false);
 
-
+  const { response: initialResponse } = useLocalSearchParams();
   const [dateRange, setDateRange] = useState({
     start_date: '2020-01',
     end_date: '2024-12'
   });
 
-  // Clean up pending requests when component unmounts
-  useEffect(() => {
-    return () => cancelRequests();
-  }, []);
+
+  const formattedStart = `${dateRange.start_date}-01`;
+  const [endYear, endMonth] = dateRange.end_date.split('-').map(Number);
+  const lastDay = new Date(endYear, endMonth, 0).getDate();
+  const formattedEnd = `${dateRange.end_date}-${lastDay}`;
+  const lowerCaseTopic = topic.toLowerCase();
+
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      const result = await postData(query, topic, dateRange.startDate, dateRange.endDate);
+    if (!query.trim()) {
+      Alert.alert('Erro', 'Por favor, insira uma pesquisa.');
+      return;
+    }
 
-      if (result.success && 'data' in result) {
+    setIsSubmitting(true);
+
+    try {
+      // Prepare the request data
+      const requestData = {
+        query: query,
+        topic: lowerCaseTopic || null,
+        start_date: formattedStart,
+        end_date: formattedEnd
+      };
+
+      // Send the request to your FastAPI backend
+      router.navigate('/loading');
+      const response = await createJob(requestData);
+      // Use the parsed data (example: logging it)
+      console.log('Response Data:', response);
+      
+
+
+      // Navigate to the result page with parameters
+      while (!isJobCompletedOrFailed(response.id)) {
+        
+        const arrayResponse = JSON.parse(response);
+        console.log('arrayResponse:', arrayResponse);
+
+
         router.push({
-          pathname: '/loading',
+          pathname: '/result',
           params: {
-            id: result.data.id,
+            id: response.id, // Assuming the response contains an `id` field
             query: query,
-            topic: topic,
-            dateInterval: `${dateRange.startDate} to ${dateRange.endDate}`
-          }
+            topic: lowerCaseTopic,
+            start_date: formattedStart,
+            end_date: formattedEnd,
+            response: JSON.stringify(response), // Pass the response as a string
+          },
         });
-      } else {
-        Alert.alert('Submission Error', 'error' in result ? result.error : 'Failed to submit data');
       }
+
+
+
     } catch (error) {
-      Alert.alert('Network Error', 'Could not connect to the server');
+      Alert.alert('Erro', 'Ocorreu um erro ao enviar a solicitação.');
     } finally {
       setIsSubmitting(false);
     }
@@ -135,9 +169,9 @@ export default function TabOneScreen() {
             }}
             title="Selecione um tópico"
             options={[
-              'Estilo de Vida e Lazer', 'Arte e Cultura', 'Desporto', 'Ciencia', 'Crime',
+              'Estilo de Vida e Lazer', 'Arte e Cultura', 'Desporto', 'Ciência', 'Crime',
               'Conflitos e Desastres',
-              'Saúde', 'Economia e Sociedade',
+              'Saúde', 'Economia e Sociedade', 'Política',
             ]}
           />
         </View>
@@ -150,8 +184,8 @@ export default function TabOneScreen() {
       </View>
     </View >
   );
-}
 
+}
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
