@@ -1,12 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import HeadKairoNews from '@/components/HeadKairoNews';
+import React from 'react';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function AboutPage() {
   const staff = [
-    { name: 'Christopher Abreu', image: require('../assets/images/icon.png') },
-    { name: 'Quintino Fernandes', image: require('../assets/images/icon.png') },
-    { name: 'Francisco Alves', image: require('../assets/images/icon.png') },
+    { name: 'Christopher Abreu', image: require('../assets/images/chris_front.jpg') },
+    { name: 'Quintino Fernandes', image: require('../assets/images/quintino_front.jpg') },
+    { name: 'Francisco Alves', image: require('../assets/images/francisco_front.jpg') },
   ];
 
   return (
