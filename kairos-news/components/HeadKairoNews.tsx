@@ -1,4 +1,6 @@
-import { StyleSheet, View, Image } from "react-native";
+import { linkTo } from "expo-router/build/global-state/routing";
+import React from "react";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import KairosNewsTitle from "./KairosNewsTitle";
 
 
@@ -8,11 +10,13 @@ const HeadKairoNews = () => {
       <View>
         <KairosNewsTitle />
       </View>
-      <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end',flex: 1,marginBottom: 10 }}>
-        <Image
-          source={require('../assets/images/arquivo.png')}
-          style={{ width: 150, height: 50, resizeMode: 'contain'}}
-        />
+      <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1, marginBottom: 10 }}>
+        <Pressable onPress={() => linkTo('https://arquivo.pt/')}>
+          <Image
+            source={require('../assets/images/arquivo.png')}
+            style={{ width: 150, height: 50, resizeMode: 'contain' }}
+          />
+        </Pressable>
       </View>
     </View>
   );

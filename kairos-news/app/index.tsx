@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Alert, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { checkJobStatus, createJob } from '@/utils/api';
+import { linkTo } from 'expo-router/build/global-state/routing';
 
 export default function TabOneScreen() {
   const [showSecondButton, setShowSecondButton] = useState(false);
@@ -21,7 +22,7 @@ export default function TabOneScreen() {
   const { response: initialResponse } = useLocalSearchParams();
   const [dateRange, setDateRange] = useState({
     start_date: '2020-01',
-    end_date: '2020-02'
+    end_date: '2024-12'
   });
 
 
@@ -127,10 +128,12 @@ const navigateToResult = async (id: any) => {
           </Pressable>
         </View>
         <View style={{ alignItems: 'flex-end', flex: 0.4, justifyContent: 'flex-end' }}>
-          <Image
-            source={require('../assets/images/arquivo.png')}
-            style={{ width: 230, resizeMode: 'contain', }}
-          />
+          <Pressable onPress={() => linkTo('https://arquivo.pt/')}>
+            <Image
+              source={require('../assets/images/arquivo.png')}
+              style={{ width: 230, resizeMode: 'contain' }}
+            />
+          </Pressable>
         </View>
       </View>
       <View style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
@@ -196,7 +199,7 @@ const navigateToResult = async (id: any) => {
             }}
             title="Selecione um tópico"
             options={[
-              'Estilo de Vida e Lazer', 'Arte e Cultura', 'Desporto', 'Ciência', 'Crime',
+              'Estilo de Vida e Lazer', 'Arte e Cultura', 'Desporto', 'Ciência e Tecnologia', 'Crime',
               'Conflitos e Desastres',
               'Saúde', 'Economia e Sociedade', 'Política',
             ]}

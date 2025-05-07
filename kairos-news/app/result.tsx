@@ -57,12 +57,9 @@ export default function resultQuery() {
               <Text style={styles.link} onPress={() => Linking.openURL(article.url)}>
               <Text  style={styles.unlinked}>Artigo:</Text> {article.url}
               </Text>
-              <Text style={styles.conteudo}>Grau de correlação: {1 - article.distance}</Text>
+              <Text style={styles.conteudo}>Grau de correlação: {((1 - Number(article.distance)) * 100).toFixed(2)} %</Text>
             </View>
           ))}
-        </View>
-        <View style={styles.container} >
-          
         </View>
       </View>
     </ScrollView>
