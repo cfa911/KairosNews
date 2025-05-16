@@ -1,8 +1,10 @@
 import HeadKairoNews from '@/components/HeadKairoNews';
+import VideoScreen from '@/components/VideoScreen';
 import React from 'react';
 import { Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function AboutPage() {
+
   const staff = [
     {
       name: 'Christopher Abreu',
@@ -59,6 +61,13 @@ export default function AboutPage() {
           ))}
         </ScrollView>
       </View>
+      <VideoScreen />
+      <View style={styles.content}>
+        <Text style={styles.text}>
+          Video disponivel também no YouTube:  <Text style={styles.link} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=tpki-VO5VB4&feature=youtu.be')}>
+            https://www.youtube.com/watch?v=tpki-VO5VB4&feature=youtu.be</Text>
+        </Text>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>Repositorios e links uteis</Text>
         <Text style={styles.text}>
@@ -79,7 +88,7 @@ export default function AboutPage() {
         </Text>
 
       </View>
-      
+
     </ScrollView>
   );
 }
@@ -108,9 +117,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     lineHeight: 24,
     fontFamily: 'Bahnschrift',
+
   },
   staffSection: {
-    marginTop: 20,
+    marginVertical: 20,
     paddingHorizontal: 20,
     flexDirection: 'column',
     alignItems: 'center',
