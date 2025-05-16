@@ -37,27 +37,7 @@ export default function AboutPage() {
           Obrigado por escolher o Kairos News como a sua fonte de confiança para se manter atualizado. Estamos comprometidos em oferecer a melhor experiência aos nossos utilizadores.
         </Text>
       </View>
-      <View style={styles.content}>
-        <Text style={styles.title}>Repositorios</Text>
-        <Text style={styles.text}>
-          Repositorio GitHub de Fronted:  <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/cfa911/KairosNews')}>
-            https://github.com/cfa911/KairosNews</Text>
-        </Text>
-        <Text style={styles.text}>
-          Repositorio GitHub de Backend:  <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/0edon/KairosNews')}>
-            https://github.com/0edon/KairosNews</Text>
-        </Text>
-        <Text style={styles.text}>
-          Repositorio de Dataset utilizado:  <Text style={styles.link} onPress={() => Linking.openURL('https://huggingface.co/datasets/0edon/KairosNews')}>
-            https://huggingface.co/datasets/0edon/KairosNews</Text>
-        </Text>
-        <Text style={styles.text}>
-          Documento sobre o projeto:  <Text style={styles.link} onPress={() => Linking.openURL('https://archive.org/details/final_20250514')}>
-            https://archive.org/details/final_20250514</Text>
-        </Text>
-        
-      </View>
-<View style={styles.staffSection}>
+      <View style={styles.staffSection}>
         <Text style={styles.staffTitle}>A Nossa Equipa</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.staffScroll}>
           {staff.map((member, index) => (
@@ -79,6 +59,27 @@ export default function AboutPage() {
           ))}
         </ScrollView>
       </View>
+      <View style={styles.content}>
+        <Text style={styles.title}>Repositorios e links uteis</Text>
+        <Text style={styles.text}>
+          Repositorio GitHub de Fronted:  <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/cfa911/KairosNews')}>
+            https://github.com/cfa911/KairosNews</Text>
+        </Text>
+        <Text style={styles.text}>
+          Repositorio GitHub de Backend:  <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/0edon/KairosNews')}>
+            https://github.com/0edon/KairosNews</Text>
+        </Text>
+        <Text style={styles.text}>
+          Repositorio de Dataset utilizado:  <Text style={styles.link} onPress={() => Linking.openURL('https://huggingface.co/datasets/0edon/KairosNews')}>
+            https://huggingface.co/datasets/0edon/KairosNews</Text>
+        </Text>
+        <Text style={styles.text}>
+          Documento sobre o projeto:  <Text style={styles.link} onPress={() => Linking.openURL('https://archive.org/details/final_20250514')}>
+            https://archive.org/details/final_20250514</Text>
+        </Text>
+
+      </View>
+      
     </ScrollView>
   );
 }
@@ -136,11 +137,11 @@ const styles = StyleSheet.create({
     borderRadius: 125,
     marginBottom: 5,
   },
-    linkedinLogo: {
+  linkedinLogo: {
     width: 28,
     height: 28,
   },
-    linkedinButton: {
+  linkedinButton: {
     marginTop: 5,
     alignItems: 'center',
   },
