@@ -4,7 +4,7 @@ import { StyleSheet, View, Button } from 'react-native';
 import { useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 
-const videoSource = require('../assets/video/QuintinoFernandes_KairosNews.mp4');
+const videoSource = 'https://xd1ouduyqwjgcvbu.public.blob.vercel-storage.com/QuintinoFernandes_KairosNews-srhAzYtFUjhdBRWLhtR0PBIerH2yvn.mp4'
 
 export default function VideoScreen() {
   const player = useVideoPlayer(videoSource, player => {
