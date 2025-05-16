@@ -1,6 +1,6 @@
 import FadeInView from '@/components/FadeInView';
 import HeadKairoNews from '@/components/HeadKairoNews';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -9,27 +9,34 @@ export default function Loading() {
   const [error, setError] = useState<string | null>(null);
   const [loadingText, setLoadingText] = useState('Recolhendo noticias...');
   const [pollingCount, setPollingCount] = useState(0);
-
+  const params = useLocalSearchParams();
+  const fadeKey = Array.isArray(params.key) ? params.key.join('-') : params.key || 'default';
 
   useEffect(() => {
     const messages = [
       'Recolhendo noticias...',
+      'Recolhendo noticias...',
+      'Processando dados...',
       'Processando dados...',
       'Quase pronto...',
+      'Quase pronto...',
+      'Quase pronto...',
+      'Quase pronto...',
+
     ];
     let index = 0;
 
     const intervalId = setInterval(() => {
       index = (index + 1) % messages.length;
       setLoadingText(messages[index]);
-    }, 4000); // Change text every 4 seconds
+    }, 5000); // Change text every 4 seconds
 
     return () => clearInterval(intervalId);
   }, []);
 
   if (error) {
     return (
-      <View>
+      <FadeInView key={fadeKey} duration={1000} style={{ flex: 1 }}>
         <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
           <HeadKairoNews />
         </View>
@@ -43,13 +50,13 @@ export default function Loading() {
             <Text style={styles.buttonText}>Go Back</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </FadeInView>
     );
   }
 
-  
+
   return (
-    <View style={{ flex: 1 }}>
+    <FadeInView key={fadeKey} duration={1000} style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#101218' }}>
         <HeadKairoNews />
       </View>
@@ -60,8 +67,12 @@ export default function Loading() {
             <Text style={styles.text}>{loadingText}</Text>
           </FadeInView>
         </View>
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.loadingText}>Pode ter de aguardar até 5 minutos...</Text>
+        </View>
       </View>
-    </View>
+
+    </FadeInView>
   );
 }
 
@@ -78,7 +89,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 32,
     color: '#ffffff',
   },
   errorText: {

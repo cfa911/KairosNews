@@ -1,5 +1,5 @@
 // apiService.js
-const API_BASE_URL = 'https://0edon-test.hf.space';
+const API_BASE_URL = 'https://0edon-kairosnews.hf.space';
 
 export const createJob = async (postRequest) => {
   const response = await fetch(`${API_BASE_URL}/index`, {

@@ -1,12 +1,24 @@
 import HeadKairoNews from '@/components/HeadKairoNews';
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function AboutPage() {
   const staff = [
-    { name: 'Christopher Abreu', image: require('../assets/images/chris_front.jpg') },
-    { name: 'Quintino Fernandes', image: require('../assets/images/quintino_front.jpg') },
-    { name: 'Francisco Alves', image: require('../assets/images/francisco_front.jpg') },
+    {
+      name: 'Christopher Abreu',
+      image: require('../assets/images/chris_front.jpg'),
+      linkedin: 'https://www.linkedin.com/in/christopher-fernandes-de-abreu-1762b614b/',
+    },
+    {
+      name: 'Quintino Fernandes',
+      image: require('../assets/images/quintino_front.jpg'),
+      linkedin: 'https://www.linkedin.com/in/quintinofernandes/',
+    },
+    {
+      name: 'Francisco Alves',
+      image: require('../assets/images/francisco_front.jpg'),
+      linkedin: 'https://www.linkedin.com/in/franciscomalves/',
+    },
   ];
 
   return (
@@ -15,7 +27,7 @@ export default function AboutPage() {
       <View style={styles.content}>
         <Text style={styles.title}>Sobre o Kairos News</Text>
         <Text style={styles.text}>
-          Bem-vindo ao Kairos News! A nossa missão é fornecer-lhe as notícias mais recentes e relevantes, adaptadas aos seus interesses. 
+          Bem-vindo ao Kairos News! A nossa missão é fornecer-lhe as notícias mais recentes e relevantes, adaptadas aos seus interesses.
           Quer esteja à procura de atualizações sobre ciência, desporto, saúde ou eventos globais, o Kairos News tem tudo o que precisa.
         </Text>
         <Text style={styles.text}>
@@ -25,14 +37,44 @@ export default function AboutPage() {
           Obrigado por escolher o Kairos News como a sua fonte de confiança para se manter atualizado. Estamos comprometidos em oferecer a melhor experiência aos nossos utilizadores.
         </Text>
       </View>
-
-      <View style={styles.staffSection}>
+      <View style={styles.content}>
+        <Text style={styles.title}>Repositorios</Text>
+        <Text style={styles.text}>
+          Repositorio GitHub de Fronted:  <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/cfa911/KairosNews')}>
+            https://github.com/cfa911/KairosNews</Text>
+        </Text>
+        <Text style={styles.text}>
+          Repositorio GitHub de Backend:  <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/0edon/KairosNews')}>
+            https://github.com/0edon/KairosNews</Text>
+        </Text>
+        <Text style={styles.text}>
+          Repositorio de Dataset utilizado:  <Text style={styles.link} onPress={() => Linking.openURL('https://huggingface.co/datasets/0edon/KairosNews')}>
+            https://huggingface.co/datasets/0edon/KairosNews</Text>
+        </Text>
+        <Text style={styles.text}>
+          Documento sobre o projeto:  <Text style={styles.link} onPress={() => Linking.openURL('https://archive.org/details/final_20250514')}>
+            https://archive.org/details/final_20250514</Text>
+        </Text>
+        
+      </View>
+<View style={styles.staffSection}>
         <Text style={styles.staffTitle}>A Nossa Equipa</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.staffScroll}>
           {staff.map((member, index) => (
             <View key={index} style={styles.staffBubble}>
               <Image source={member.image} style={styles.staffImage} />
               <Text style={styles.staffName}>{member.name}</Text>
+              <Pressable
+                onPress={() => Linking.openURL(member.linkedin)}
+                style={styles.linkedinButton}
+                accessibilityLabel={`Abrir LinkedIn de ${member.name}`}
+              >
+                <Image
+                  source={require('../assets/images/linkedin.png')}
+                  style={styles.linkedinLogo}
+                  resizeMode="contain"
+                />
+              </Pressable>
             </View>
           ))}
         </ScrollView>
@@ -48,6 +90,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   title: {
     fontSize: 28,
@@ -85,11 +129,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 15,
   },
+  link: { color: '#6495ED' },
   staffImage: {
     width: 125,
     height: 125,
     borderRadius: 125,
     marginBottom: 5,
+  },
+    linkedinLogo: {
+    width: 28,
+    height: 28,
+  },
+    linkedinButton: {
+    marginTop: 5,
+    alignItems: 'center',
   },
   staffName: {
     fontSize: 14,

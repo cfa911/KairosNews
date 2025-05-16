@@ -3,8 +3,8 @@ import FadeInView from '@/components/FadeInView';
 import SelectionModal from '@/components/SelectionModal';
 import Typewriter from '@/components/TypeWriter';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Alert, Animated, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { checkJobStatus, createJob } from '@/utils/api';
 import { linkTo } from 'expo-router/build/global-state/routing';
@@ -15,7 +15,9 @@ export default function TabOneScreen() {
   const [query, setQuery] = useState('');
   const [topic, setTopic] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  // ...existing state...
+  const [isFading, setIsFading] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedVisible, setSelectedVisible] = useState(false);
 
@@ -101,17 +103,27 @@ const navigateToResult = async (id: any) => {
         end_date: formattedEnd
       };
 
-      // Send the request to your FastAPI backend
-      router.navigate('/loading');
-      const response = await createJob(requestData);
-      // Use the parsed data (example: logging it)
-      console.log('Response Data:', response);
-      navigateToResult(response.id); // Pass the job ID to the result page
-
+      // Start fade out animation
+      setIsFading(true);
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }).start(async () => {
+        // Navigate after fade out
+        router.navigate({ pathname: '/loading', params: { key: Date.now().toString() } });
+        const response = await createJob(requestData);
+        console.log('Response Data:', response);
+        navigateToResult(response.id);
+        setIsFading(false);
+        fadeAnim.setValue(1); // Reset for next time
+      });
 
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Erro', 'Ocorreu um erro ao enviar a pesquisa. Por favor, tente novamente.');
+      setIsFading(false);
+      fadeAnim.setValue(1);
     }
     setIsSubmitting(false);
   }
@@ -119,7 +131,7 @@ const navigateToResult = async (id: any) => {
 
 
   return (
-    <View style={styles.mainContainer}>
+    <Animated.View style={[styles.mainContainer, { opacity: fadeAnim }]}>
       {/* Add the About button */}
       <View>
         <View style={{ alignItems: 'flex-end', marginVertical: 15, marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -181,7 +193,7 @@ const navigateToResult = async (id: any) => {
           </View>
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Typewriter speed={20} textStyle={styles.nota} text={"Experimente adicionar filtros para uma pesquisa mais minuciosa. Além disso as noticias são primariamente relevantes a 2020-2023"} />
+          <Typewriter speed={20} textStyle={styles.nota} text={"Por favor adicione filtros para um sumario mais conciso e relevante. Além disso as noticias são primariamente relevantes a 2020-2023"} />
         </View>
         <View >
           <DateRangeModal
@@ -212,7 +224,7 @@ const navigateToResult = async (id: any) => {
           />
         </View>
       </View>
-    </View >
+    </Animated.View>
   );
 
 }
